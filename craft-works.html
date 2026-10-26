@@ -1,0 +1,1136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Craft Apps — portable downloads</title>
+<meta name="description" content="Download the latest portable build of every Craft App: PhotoCraft, VectorCraft, FilmCraft, LightCraft, PdfCraft and more.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07080b">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236d8bff'/%3E%3Cstop offset='.5' stop-color='%2343e0c0'/%3E%3Cstop offset='1' stop-color='%23ff6fa5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Cpath d='M16 6v20M6 16h20M10 10l12 12M22 10 10 22' fill='none' stroke='%230a0b10' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --bg: #07080b;
+    --text: #eef1f7;
+    --muted: #99a1b3;
+    --faint: #7a8295;
+    --line: rgba(255, 255, 255, .085);
+    --line-strong: rgba(255, 255, 255, .17);
+    --focus: rgba(122, 162, 255, .85);
+    --radius: 18px;
+    --max: 1280px;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font: 15px/1.55 ui-sans-serif, -apple-system, "Segoe UI Variable Text", "Segoe UI", Inter, Roboto, "Helvetica Neue", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(900px 620px at 8% -12%, rgba(96, 128, 255, .17), transparent 62%),
+      radial-gradient(820px 520px at 92% -6%, rgba(255, 92, 158, .11), transparent 62%),
+      radial-gradient(760px 720px at 46% 118%, rgba(0, 214, 176, .075), transparent 62%),
+      var(--bg);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: inherit; }
+
+  :where(a, button, summary):focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ---------- top bar ---------- */
+
+  .topbar {
+    position: sticky; top: 0; z-index: 30;
+    background: rgba(7, 8, 11, .72);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+  }
+  .topbar-in {
+    max-width: var(--max); margin: 0 auto;
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .mark {
+    width: 34px; height: 34px; flex: none; border-radius: 11px;
+    display: grid; place-items: center;
+    background: conic-gradient(from 205deg, #6d8bff, #43e0c0, #ff6fa5, #6d8bff);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .28), 0 8px 22px -10px rgba(109, 139, 255, .9);
+  }
+  .mark svg { width: 18px; height: 18px; display: block; }
+  .brand h1 {
+    margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.01em;
+  }
+  .brand p { margin: 1px 0 0; font-size: 12px; color: var(--faint); letter-spacing: .01em; }
+  .topbar-spacer { flex: 1; }
+
+  .ghost-link {
+    font-size: 12.5px; color: var(--muted); text-decoration: none;
+    padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line);
+    transition: color .2s, border-color .2s, background .2s;
+    white-space: nowrap;
+  }
+  .ghost-link:hover { color: var(--text); border-color: var(--line-strong); background: rgba(255, 255, 255, .04); }
+
+  /* ---------- layout ---------- */
+
+  main { max-width: var(--max); margin: 0 auto; padding: 34px 24px 40px; }
+
+  .hero { margin-bottom: 26px; max-width: 720px; }
+  .hero h2 {
+    margin: 0 0 8px; font-size: clamp(26px, 3.2vw, 36px); line-height: 1.1;
+    letter-spacing: -.028em; font-weight: 680;
+  }
+  .hero h2 span {
+    background: linear-gradient(92deg, #a9bcff 0%, #7ef0d4 48%, #ff9dc4 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  /* ---------- toolbar ---------- */
+
+  .toolbar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    margin-bottom: 22px;
+  }
+  .search {
+    position: relative; flex: 1 1 240px; max-width: 320px;
+  }
+  .search svg {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    width: 15px; height: 15px; color: var(--faint); pointer-events: none;
+  }
+  .search input {
+    width: 100%; font: inherit; font-size: 13.5px; color: var(--text);
+    padding: 10px 38px 10px 36px;
+    border-radius: 999px; border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .045);
+    outline: none; transition: border-color .2s, background .2s, box-shadow .2s;
+  }
+  .search input::placeholder { color: var(--faint); }
+  .search input:focus {
+    border-color: rgba(122, 162, 255, .55);
+    background: rgba(255, 255, 255, .07);
+    box-shadow: 0 0 0 4px rgba(122, 162, 255, .13);
+  }
+  .search kbd {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    font-family: var(--mono); font-size: 11px; line-height: 1.4; color: var(--faint);
+    padding: 0 6px; border-radius: 6px; border: 1px solid var(--line-strong);
+    pointer-events: none;
+  }
+  .search input:focus ~ kbd, .search input:not(:placeholder-shown) ~ kbd { display: none; }
+
+  .seg {
+    display: flex; gap: 2px; padding: 3px;
+    border-radius: 999px; border: 1px solid var(--line);
+    background: rgba(255, 255, 255, .04);
+  }
+  .seg button {
+    font: inherit; font-size: 12.5px; color: var(--muted);
+    padding: 6px 13px; border-radius: 999px; border: 0;
+    background: transparent; cursor: pointer;
+    transition: color .18s, background .18s;
+    white-space: nowrap;
+  }
+  .seg button:focus-visible { outline-offset: 0; }
+  .seg button:hover { color: var(--text); }
+  .seg button[aria-pressed="true"] {
+    color: #0b0c10; background: #e9edf6; font-weight: 600;
+  }
+  .seg .auto-os { opacity: .62; font-weight: 500; }
+
+  .status {
+    display: flex; align-items: center; gap: 8px; margin-left: auto; min-width: 0;
+    font-size: 12.5px; color: var(--faint);
+  }
+  #status { min-width: 0; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #3ddc97;
+    box-shadow: 0 0 0 4px rgba(61, 220, 151, .14);
+    flex: none;
+  }
+  .dot[data-state="loading"] { background: #f2b544; box-shadow: 0 0 0 4px rgba(242, 181, 68, .16); animation: pulse 1.4s ease-in-out infinite; }
+  .dot[data-state="cached"] { background: #7f8899; box-shadow: 0 0 0 4px rgba(127, 136, 153, .16); }
+  .dot[data-state="partial"] { background: #f2b544; box-shadow: 0 0 0 4px rgba(242, 181, 68, .16); }
+  @keyframes pulse { 50% { opacity: .35; } }
+
+  .refresh {
+    flex: none;
+    font: inherit; font-size: 12.5px; color: var(--muted);
+    padding: 7px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: rgba(255, 255, 255, .04);
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  .refresh:hover:not(:disabled) { color: var(--text); border-color: var(--line-strong); }
+  .refresh:disabled { opacity: .5; cursor: default; }
+
+  .notice {
+    margin: -8px 0 20px; padding: 10px 14px; border-radius: 12px;
+    font-size: 13px; color: var(--muted);
+    border: 1px solid rgba(242, 181, 68, .24); background: rgba(242, 181, 68, .06);
+  }
+
+  /* ---------- cards ---------- */
+
+  .grid {
+    display: grid; gap: 16px; align-items: start;   /* an opened file list shouldn't stretch its neighbours */
+    grid-template-columns: repeat(auto-fill, minmax(min(348px, 100%), 1fr));
+  }
+
+  .card {
+    position: relative; isolation: isolate; min-width: 0;
+    display: flex; flex-direction: column; gap: 14px;
+    padding: 18px 18px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .018));
+    transition: transform .28s cubic-bezier(.2, .7, .3, 1), border-color .28s, box-shadow .28s;
+  }
+  .card::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    border-radius: inherit; pointer-events: none; opacity: .5;
+    background: radial-gradient(420px 190px at 18% -30%, var(--app-22), transparent 72%);
+    transition: opacity .3s;
+  }
+  .card::after {
+    content: ""; position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--app-45), transparent);
+  }
+  @media (hover: hover) {
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--line-strong);
+      box-shadow: 0 22px 44px -24px rgba(0, 0, 0, .85);
+    }
+    .card:hover::before { opacity: 1; }
+  }
+
+  .card-head { display: flex; gap: 12px; align-items: center; }
+  .icon {
+    width: 46px; height: 46px; flex: none; border-radius: 13px;
+    display: grid; place-items: center; overflow: hidden;
+    background: var(--app-13);
+    border: 1px solid var(--app-30);
+    font-weight: 700; font-size: 19px; color: var(--app-ink);
+  }
+  .icon > * { grid-area: 1 / 1; transition: opacity .25s; }
+  .icon img { width: 100%; height: 100%; object-fit: contain; padding: 5px; display: block; opacity: 0; }
+  .icon.loaded img { opacity: 1; }
+  .icon.loaded .letter { opacity: 0; }
+
+  .titles { min-width: 0; flex: 1; }
+  .titles h3 { margin: 0; font-size: 16.5px; font-weight: 650; letter-spacing: -.012em; }
+  .titles p { margin: 1px 0 0; font-size: 12.8px; color: var(--muted); }
+
+  .ver {
+    font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--muted);
+    padding: 1px 7px; border-radius: 7px;
+    border: 1px solid var(--line); background: rgba(255, 255, 255, .05);
+    white-space: nowrap;
+  }
+  .updated {
+    font-size: 10.5px; font-weight: 600; line-height: 1.5; letter-spacing: .02em; color: var(--text);
+    padding: 1px 8px; border-radius: 999px;
+    border: 1px solid var(--app-45); background: var(--app-18);
+    white-space: nowrap;
+  }
+
+  .meta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+    font-size: 12px; color: var(--faint);
+    margin-top: -4px;
+  }
+  .meta .sep { opacity: .45; }
+  .meta a { color: var(--faint); text-decoration: none; border-bottom: 1px solid transparent; transition: color .2s, border-color .2s; }
+  .meta a:hover { color: var(--text); border-color: var(--line-strong); }
+
+  .dl { display: flex; flex-direction: column; gap: 9px; margin-top: auto; }
+
+  .btn {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 3px 9px;
+    padding: 11px 14px; border-radius: 12px;
+    font-size: 13.8px; font-weight: 640; letter-spacing: -.005em;
+    color: #fff; text-decoration: none;
+    background: linear-gradient(180deg, var(--app-30), var(--app-12));
+    border: 1px solid var(--app-45);
+    transition: box-shadow .24s, transform .12s, filter .24s;
+  }
+  .btn:hover { filter: brightness(1.14); box-shadow: 0 12px 26px -14px var(--app-55); }
+  .btn:active { transform: translateY(1px) scale(.995); }
+  .btn svg { width: 15px; height: 15px; flex: none; opacity: .9; }
+  .btn .size { font-family: var(--mono); font-size: 11px; color: rgba(255, 255, 255, .66); font-weight: 400; }
+
+  .picker { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+  .picker-sep { width: 1px; height: 16px; background: var(--line-strong); flex: none; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font: inherit; font-size: 11.5px; line-height: 1.5;
+    padding: 3px 9px; border-radius: 999px; cursor: pointer;
+    color: var(--faint);
+    border: 1px solid rgba(255, 255, 255, .07);
+    background: rgba(255, 255, 255, .035);
+    transition: color .18s, border-color .18s, background .18s;
+    white-space: nowrap;
+  }
+  .chip:hover { color: var(--text); border-color: var(--line-strong); }
+  .chip[aria-pressed="true"] {
+    color: var(--text); border-color: var(--app-45); background: var(--app-18);
+  }
+  /* a single option is a label, not a button */
+  .chip.tag, .chip.tag:hover {
+    cursor: default; color: var(--muted);
+    border-color: transparent; background: transparent; padding-left: 2px; padding-right: 2px;
+  }
+
+  .files { border-top: 1px solid rgba(255, 255, 255, .06); padding-top: 2px; }
+  .files summary {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12.3px; color: var(--muted);
+    padding: 6px 0 2px;
+    transition: color .2s;
+  }
+  .files summary::-webkit-details-marker { display: none; }
+  .files summary:hover { color: var(--text); }
+  .files summary .caret {
+    width: 0; height: 0; flex: none;
+    border-left: 4.5px solid currentColor;
+    border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+    transition: transform .22s;
+  }
+  .files[open] summary .caret { transform: rotate(90deg); }
+  .fgroup h4 {
+    margin: 10px 8px 3px;
+    font-size: 11px; font-weight: 600; letter-spacing: .02em;
+    color: var(--faint);
+  }
+  .files ul { list-style: none; margin: 0; padding: 0; }
+  .files li { border-top: 1px solid rgba(255, 255, 255, .05); }
+  .files li:first-child { border-top: 0; }
+  .files li a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 8px; border-radius: 8px;
+    text-decoration: none; color: var(--muted);
+    transition: background .16s, color .16s;
+  }
+  .files li a:hover { background: rgba(255, 255, 255, .055); color: var(--text); }
+  .files li a.current { background: var(--app-12); color: var(--text); }
+  .fname {
+    font-family: var(--mono); font-size: 11.3px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    flex: 1; min-width: 0;
+  }
+  .fsize { font-family: var(--mono); font-size: 11px; color: var(--faint); flex: none; }
+  .files svg { width: 13px; height: 13px; flex: none; opacity: .55; }
+  .files li a.current svg { opacity: .9; }
+
+  .nobuild {
+    margin: auto 0 0; padding: 12px 14px; border-radius: 12px;
+    font-size: 13px; color: var(--muted);
+    border: 1px dashed var(--line-strong);
+  }
+  .nobuild a { color: var(--text); }
+
+  .hidden { display: none !important; }
+
+  .empty {
+    text-align: center; color: var(--faint); font-size: 14px;
+    padding: 60px 0; margin: 0;
+  }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    max-width: var(--max); margin: 0 auto;
+    padding: 26px 24px 56px;
+    border-top: 1px solid rgba(255, 255, 255, .055);
+    color: var(--faint); font-size: 12.5px;
+    display: grid; gap: 8px;
+  }
+  footer p { margin: 0; max-width: 76ch; }
+  footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+  footer a:hover { color: var(--text); }
+  footer code { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+
+  @media (max-width: 620px) {
+    .topbar-in, main, footer { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .search { max-width: none; }
+    .search kbd { display: none; }
+    .status { margin-left: 0; width: 100%; }
+    .seg { overflow-x: auto; scrollbar-width: none; }
+    .seg::-webkit-scrollbar { display: none; }
+    .ghost-link { display: none; }
+    .hero p { font-size: 14px; }
+    .btn { font-size: 13.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+    .card:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#0a0b10" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v18M3 12h18M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Craft Apps</h1>
+        <p>Portable builds · no installers</p>
+      </div>
+    </div>
+    <div class="topbar-spacer"></div>
+    <a class="ghost-link" href="https://github.com/storytold" target="_blank" rel="noopener">github.com/storytold ↗</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h2>Every Craft App <span>in one place</span></h2>
+    <p>Thirteen open-source creative tools. Each card offers the newest release straight from GitHub — portable ZIPs, DMGs, AppImages and tarballs only, so nothing touches your system installers.</p>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input id="q" type="search" placeholder="Search apps…" aria-label="Search apps" aria-keyshortcuts="/" autocomplete="off" spellcheck="false">
+      <kbd aria-hidden="true">/</kbd>
+    </div>
+
+    <div class="seg" id="platforms" role="group" aria-label="Target platform">
+      <button type="button" data-os="auto" aria-pressed="true">Auto<span class="auto-os" id="auto-os"></span></button>
+      <button type="button" data-os="windows" aria-pressed="false">Windows</button>
+      <button type="button" data-os="macos" aria-pressed="false">macOS</button>
+      <button type="button" data-os="linux" aria-pressed="false">Linux</button>
+      <button type="button" data-os="freebsd" aria-pressed="false">FreeBSD</button>
+    </div>
+
+    <div class="status">
+      <span class="dot" id="dot" data-state="loading" aria-hidden="true"></span>
+      <span id="status">Loading…</span>
+      <button type="button" class="refresh" id="refresh">Refresh</button>
+      <span class="sr-only" id="announce" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <p class="notice hidden" id="mobile-note">Craft Apps are desktop software. Pick the computer you'll run them on — Windows builds are shown until you do.</p>
+
+  <div class="grid" id="grid"></div>
+  <p class="empty hidden" id="empty">No apps match that search.</p>
+</main>
+
+<footer>
+  <p><strong>Portable only.</strong> This catalog lists ZIP, DMG, AppImage and tar.gz builds. Platform installers
+  (<code>.msi</code>, <code>.deb</code>, <code>.rpm</code>, <code>.flatpak</code>, <code>.pkg.tar.zst</code>) and the
+  <code>-cli</code> / <code>-server</code> / <code>-web</code> side builds are left out on purpose. Uninstall support is not part of this version.</p>
+  <p>Versions and links come from the public GitHub Releases API <em>api.github.com</em>. Every release is re-checked
+  automatically every 6 hours and published with this page; <strong>Refresh</strong> asks GitHub directly from your browser.
+  GitHub allows 60 unauthenticated requests an hour per network and a full refresh uses 13, so when that runs low the apps
+  checked longest ago go first. All apps are Apache-2.0 and © their authors at
+  <a href="https://github.com/storytold" target="_blank" rel="noopener">storytold</a>. This page is an unofficial mirror of their download links.</p>
+</footer>
+
+<script>
+/* ------------------------------------------------------------------ data */
+
+const SUITE = [
+  {"id":"photocraft","name":"PhotoCraft","tagline":"Image editing","rgb":[47,123,245],"tag":"v0.16.0","published":"2026-10-25T14:17:53Z","assets":[["photocraft-0.16.0-freebsd-x86_64.tar.gz",87249731],["photocraft-0.16.0-linux-aarch64.AppImage",79026696],["photocraft-0.16.0-linux-aarch64.tar.gz",83104781],["photocraft-0.16.0-linux-riscv64.tar.gz",85257010],["photocraft-0.16.0-linux-x86_64.AppImage",83327480],["photocraft-0.16.0-linux-x86_64.tar.gz",87847296],["photocraft-0.16.0-macos-universal.dmg",98985128],["photocraft-0.16.0-windows-arm64-portable.zip",84925185],["photocraft-0.16.0-windows-x64-portable.zip",90025164],["photocraft-0.16.0-windows-x86-portable.zip",85114531]]},
+  {"id":"vectorcraft","name":"VectorCraft","tagline":"Vector illustration","rgb":[232,87,63],"tag":"v0.17.0","published":"2026-10-25T14:01:11Z","assets":[["vectorcraft-0.17.0-freebsd-x86_64.tar.gz",129062550],["vectorcraft-0.17.0-linux-aarch64.AppImage",117246472],["vectorcraft-0.17.0-linux-aarch64.tar.gz",123813544],["vectorcraft-0.17.0-linux-riscv64.tar.gz",127143139],["vectorcraft-0.17.0-linux-x86_64.AppImage",122190328],["vectorcraft-0.17.0-linux-x86_64.tar.gz",129314923],["vectorcraft-0.17.0-macos-universal.dmg",144749321],["vectorcraft-0.17.0-windows-arm64-portable.zip",126072003],["vectorcraft-0.17.0-windows-x64-portable.zip",132356785],["vectorcraft-0.17.0-windows-x86-portable.zip",127108582]]},
+  {"id":"filmcraft","name":"FilmCraft","tagline":"Video editing, color and sound","rgb":[139,92,246],"tag":"v0.13.0","published":"2026-10-25T13:48:40Z","assets":[["filmcraft-0.13.0-freebsd-x86_64.tar.gz",98621071],["filmcraft-0.13.0-linux-aarch64.AppImage",92076552],["filmcraft-0.13.0-linux-aarch64.tar.gz",96338989],["filmcraft-0.13.0-linux-riscv64.tar.gz",97904137],["filmcraft-0.13.0-linux-x86_64.AppImage",94710264],["filmcraft-0.13.0-linux-x86_64.tar.gz",99300525],["filmcraft-0.13.0-macos-universal.dmg",103684923],["filmcraft-0.13.0-windows-arm64-portable.zip",97166251],["filmcraft-0.13.0-windows-x64-portable.zip",100415987],["filmcraft-0.13.0-windows-x86-portable.zip",99404355]]},
+  {"id":"lightcraft","name":"LightCraft","tagline":"Photo library and raw development","rgb":[242,165,22],"tag":"v0.14.0","published":"2026-10-25T13:52:07Z","assets":[["lightcraft-0.14.0-freebsd-x86_64.tar.gz",110194536],["lightcraft-0.14.0-linux-aarch64.AppImage",100534792],["lightcraft-0.14.0-linux-aarch64.tar.gz",105907230],["lightcraft-0.14.0-linux-riscv64.tar.gz",107924349],["lightcraft-0.14.0-linux-x86_64.AppImage",104929784],["lightcraft-0.14.0-linux-x86_64.tar.gz",110659593],["lightcraft-0.14.0-macos-universal.dmg",114839456],["lightcraft-0.14.0-windows-arm64-portable.zip",106844092],["lightcraft-0.14.0-windows-x64-portable.zip",111358610],["lightcraft-0.14.0-windows-x86-portable.zip",107314222]]},
+  {"id":"pdfcraft","name":"PdfCraft","tagline":"Reading, organizing and protecting PDFs","rgb":[18,165,138],"tag":"v0.14.0","published":"2026-10-25T13:56:05Z","assets":[["pdfcraft-0.14.0-freebsd-x86_64.tar.gz",87679476],["pdfcraft-0.14.0-linux-aarch64.AppImage",80562696],["pdfcraft-0.14.0-linux-aarch64.tar.gz",84547559],["pdfcraft-0.14.0-linux-riscv64.tar.gz",85822988],["pdfcraft-0.14.0-linux-x86_64.AppImage",84122104],["pdfcraft-0.14.0-linux-x86_64.tar.gz",88290032],["pdfcraft-0.14.0-macos-universal.dmg",98841931],["pdfcraft-0.14.0-windows-arm64-portable.zip",85145788],["pdfcraft-0.14.0-windows-x64-portable.zip",88897780],["pdfcraft-0.14.0-windows-x86-portable.zip",84962185]]},
+  {"id":"effectcraft","name":"EffectCraft","tagline":"Motion graphics and visual effects","rgb":[224,54,143],"tag":"v0.17.0","published":"2026-10-25T14:01:25Z","assets":[["effectcraft-0.17.0-freebsd-x86_64.tar.gz",64390156],["effectcraft-0.17.0-linux-aarch64.AppImage",55937544],["effectcraft-0.17.0-linux-aarch64.tar.gz",60428529],["effectcraft-0.17.0-linux-riscv64.tar.gz",63181878],["effectcraft-0.17.0-linux-x86_64.AppImage",59898360],["effectcraft-0.17.0-linux-x86_64.tar.gz",64715337],["effectcraft-0.17.0-macos-universal.dmg",66357060],["effectcraft-0.17.0-windows-arm64-portable.zip",62827737],["effectcraft-0.17.0-windows-x64-portable.zip",67888061],["effectcraft-0.17.0-windows-x86-portable.zip",64485801]]},
+  {"id":"designcraft","name":"DesignCraft","tagline":"Page layout and publishing","rgb":[123,181,28],"tag":"v0.13.0","published":"2026-10-25T13:30:37Z","assets":[["designcraft-0.13.0-freebsd-x86_64.tar.gz",110804332],["designcraft-0.13.0-linux-aarch64.AppImage",101747208],["designcraft-0.13.0-linux-aarch64.tar.gz",107186638],["designcraft-0.13.0-linux-riscv64.tar.gz",109467862],["designcraft-0.13.0-linux-x86_64.AppImage",105282040],["designcraft-0.13.0-linux-x86_64.tar.gz",110947517],["designcraft-0.13.0-macos-universal.dmg",120766273],["designcraft-0.13.0-windows-arm64-portable.zip",106781738],["designcraft-0.13.0-windows-x64-portable.zip",110936162],["designcraft-0.13.0-windows-x86-portable.zip",107641617]]},
+  {"id":"figcraft","name":"FigCraft","tagline":"Interface design and prototyping","rgb":[2,218,150],"tag":"v0.11.2","published":"2026-10-25T14:02:25Z","assets":[["figcraft-0.11.2-freebsd-x86_64.tar.gz",89082910],["figcraft-0.11.2-linux-aarch64.AppImage",81443336],["figcraft-0.11.2-linux-aarch64.tar.gz",86617100],["figcraft-0.11.2-linux-riscv64.tar.gz",87838795],["figcraft-0.11.2-linux-x86_64.AppImage",84146680],["figcraft-0.11.2-linux-x86_64.tar.gz",89462534],["figcraft-0.11.2-macos-universal.dmg",97550182],["figcraft-0.11.2-windows-arm64-portable.zip",86124983],["figcraft-0.11.2-windows-x64-portable.zip",89097768],["figcraft-0.11.2-windows-x86-portable.zip",86112032]]},
+  {"id":"wordcraft","name":"WordCraft","tagline":"Writing and document design","rgb":[63,95,224],"tag":"v0.11.0","published":"2026-10-25T13:30:52Z","assets":[["wordcraft-0.11.0-freebsd-x86_64.tar.gz",106658343],["wordcraft-0.11.0-linux-aarch64.AppImage",95590920],["wordcraft-0.11.0-linux-aarch64.tar.gz",100403140],["wordcraft-0.11.0-linux-riscv64.tar.gz",102256978],["wordcraft-0.11.0-linux-x86_64.AppImage",98503160],["wordcraft-0.11.0-linux-x86_64.tar.gz",103471885],["wordcraft-0.11.0-macos-universal.dmg",114368425],["wordcraft-0.11.0-windows-arm64-portable.zip",99838179],["wordcraft-0.11.0-windows-x64-portable.zip",102900685],["wordcraft-0.11.0-windows-x86-portable.zip",99932035]]},
+  {"id":"soundcraft","name":"SoundCraft","tagline":"Recording, editing and mixing audio","rgb":[31,165,201],"tag":"v0.13.1","published":"2026-10-25T13:44:38Z","assets":[["soundcraft-0.13.1-freebsd-x86_64.tar.gz",17446609],["soundcraft-0.13.1-linux-aarch64.AppImage",15731208],["soundcraft-0.13.1-linux-aarch64.tar.gz",16313407],["soundcraft-0.13.1-linux-riscv64.tar.gz",17075279],["soundcraft-0.13.1-linux-x86_64.AppImage",17123832],["soundcraft-0.13.1-linux-x86_64.tar.gz",17786593],["soundcraft-0.13.1-macos-universal.dmg",25189549],["soundcraft-0.13.1-windows-arm64-portable.zip",14892430],["soundcraft-0.13.1-windows-x64-portable.zip",16292992],["soundcraft-0.13.1-windows-x86-portable.zip",15106784]]},
+  {"id":"deckcraft","name":"DeckCraft","tagline":"Presentations and slide shows","rgb":[240,122,30],"tag":"v0.11.1","published":"2026-10-25T13:36:43Z","assets":[["deckcraft-0.11.1-freebsd-x86_64.tar.gz",81469035],["deckcraft-0.11.1-linux-aarch64.AppImage",74578440],["deckcraft-0.11.1-linux-aarch64.tar.gz",79072586],["deckcraft-0.11.1-linux-riscv64.tar.gz",80731739],["deckcraft-0.11.1-linux-x86_64.AppImage",77003256],["deckcraft-0.11.1-linux-x86_64.tar.gz",81604109],["deckcraft-0.11.1-macos-universal.dmg",87374766],["deckcraft-0.11.1-windows-arm64-portable.zip",78634782],["deckcraft-0.11.1-windows-x64-portable.zip",81512631],["deckcraft-0.11.1-windows-x86-portable.zip",79178311]]},
+  {"id":"cadcraft","name":"CADCraft","tagline":"Computer-aided design and drafting","rgb":[62,166,232],"tag":"v0.13.0","published":"2026-10-25T13:48:56Z","assets":[["cadcraft-0.13.0-freebsd-x86_64.tar.gz",67913429],["cadcraft-0.13.0-linux-aarch64.AppImage",59345416],["cadcraft-0.13.0-linux-aarch64.tar.gz",62527786],["cadcraft-0.13.0-linux-riscv64.tar.gz",64000411],["cadcraft-0.13.0-linux-x86_64.AppImage",61794808],["cadcraft-0.13.0-linux-x86_64.tar.gz",65101567],["cadcraft-0.13.0-macos-universal.dmg",72477065],["cadcraft-0.13.0-windows-arm64-portable.zip",61769024],["cadcraft-0.13.0-windows-x64-portable.zip",64648623],["cadcraft-0.13.0-windows-x86-portable.zip",62611592]]},
+  {"id":"gridcraft","name":"GridCraft","tagline":"Spreadsheets and data","rgb":[31,157,85],"tag":"v0.12.1","published":"2026-10-25T13:27:32Z","assets":[["gridcraft-0.12.1-freebsd-x86_64.tar.gz",20583265],["gridcraft-0.12.1-linux-aarch64.AppImage",18487816],["gridcraft-0.12.1-linux-aarch64.tar.gz",19340517],["gridcraft-0.12.1-linux-riscv64.tar.gz",20098609],["gridcraft-0.12.1-linux-x86_64.AppImage",19864056],["gridcraft-0.12.1-linux-x86_64.tar.gz",20816263],["gridcraft-0.12.1-macos-universal.dmg",26159221],["gridcraft-0.12.1-windows-arm64-portable.zip",18277728],["gridcraft-0.12.1-windows-x64-portable.zip",19665515],["gridcraft-0.12.1-windows-x86-portable.zip",18116749]]}
+];
+
+/* when SUITE above was scraped; noon UTC reads as the 26th in every timezone */
+const SNAPSHOT_AT = "2026-10-26T12:00:00Z";
+const SNAPSHOT_MS = Date.parse(SNAPSHOT_AT);
+const API = "https://api.github.com/";
+const ICON_BASE = "https://raw.githubusercontent.com/storytold/craft-launcher/main/assets/app-icons/";
+const FRESH_MS = 7 * 3600 * 1000;   // a check counts as current until the next 6-hourly catalog build is due
+
+for (const app of SUITE) app.checkedAt = SNAPSHOT_AT;
+
+/* ------------------------------------------------- filenames → platforms */
+
+const ARCH_LABEL = {
+  x64: "x64", x86: "x86", arm64: "ARM64",
+  x86_64: "x86_64", aarch64: "ARM64", riscv64: "RISC-V 64", universal: "Universal"
+};
+const OS_LABEL = { windows: "Windows", macos: "macOS", linux: "Linux", freebsd: "FreeBSD" };
+const OS_ORDER = ["windows", "macos", "linux", "freebsd"];
+const KIND_ORDER = ["zip", "dmg", "appimage", "tarball"];
+const KIND_LABEL = { zip: "ZIP", dmg: "DMG", appimage: "AppImage", tarball: "tar.gz" };
+
+/* Windows spells 64-bit x64/arm64, Linux and FreeBSD say x86_64/aarch64. */
+const ARCH_SYNONYM = {
+  x64: ["x64", "x86_64"], x86_64: ["x86_64", "x64"],
+  arm64: ["arm64", "aarch64"], aarch64: ["aarch64", "arm64"],
+  x86: ["x86"], riscv64: ["riscv64"], universal: ["universal"]
+};
+const ARCH_PREFERENCE = ["x64", "x86_64", "universal", "arm64", "aarch64", "x86", "riscv64"];
+
+function rank(order, x) {
+  const i = order.indexOf(x);
+  return i < 0 ? order.length : i;
+}
+
+/* Decide what a release asset is, or return null if we do not want it. */
+function parseAsset(name) {
+  if (/-cli-|-server-|-web-|SHA256/i.test(name)) return null;
+
+  let m = name.match(/^[a-z0-9]+-[\d.]+-windows-(x64|x86|arm64)-portable\.zip$/i);
+  if (m) return { os: "windows", arch: m[1].toLowerCase(), kind: "zip" };
+
+  if (/^[a-z0-9]+-[\d.]+-macos-universal\.dmg$/i.test(name))
+    return { os: "macos", arch: "universal", kind: "dmg" };
+
+  m = name.match(/^[a-z0-9]+-[\d.]+-(linux|freebsd)-(x86_64|aarch64|riscv64)\.(AppImage|tar\.gz)$/i);
+  if (m) return { os: m[1].toLowerCase(), arch: m[2].toLowerCase(), kind: m[3] === "AppImage" ? "appimage" : "tarball" };
+
+  return null;
+}
+
+function assetUrl(app, name) {
+  return "https://github.com/storytold/" + app.id + "/releases/download/" + app.tag + "/" + encodeURIComponent(name);
+}
+
+/* Build { os: { arch: { kind: asset } } } from a release asset list. */
+function buildAvail(app) {
+  const avail = {};
+  for (const [name, size] of app.assets) {
+    const t = parseAsset(name);
+    if (!t) continue;
+    const byArch = (avail[t.os] ||= {});
+    const byKind = (byArch[t.arch] ||= {});
+    byKind[t.kind] = { name, size, url: assetUrl(app, name) };
+  }
+  return avail;
+}
+
+function hasPortable(app) {
+  return Object.keys(buildAvail(app)).length > 0;
+}
+
+/* ------------------------------------------------------------ environment */
+
+function detect() {
+  const ua = navigator.userAgent || "";
+  const uad = navigator.userAgentData;
+  const plat = (uad && uad.platform) || "";
+
+  // phones and tablets can't run these; iPadOS asks for desktop sites as "Macintosh"
+  const mobile = !!(uad && uad.mobile) || /Android|iPhone|iPad|iPod/i.test(ua)
+    || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (mobile) return { os: "windows", arch: "x64", mobile: true };
+
+  let os = "linux", arch = "x86_64";
+  if (/windows/i.test(plat) || /Windows/.test(ua)) os = "windows";
+  else if (/macos/i.test(plat) || /Macintosh|Mac OS X/.test(ua)) os = "macos";
+  else if (/freebsd/i.test(plat) || /FreeBSD/.test(ua)) os = "freebsd";
+
+  if (os === "windows") arch = /arm64|aarch64/i.test(ua) ? "arm64" : (/Win64|WOW64|x64/i.test(ua) ? "x64" : "x86");
+  else if (os === "macos") arch = "universal";
+  else if (os === "linux") arch = /aarch64|arm64|armv8/i.test(ua) ? "aarch64" : (/riscv64/i.test(ua) ? "riscv64" : "x86_64");
+
+  return { os, arch, mobile: false };
+}
+
+/* Chromium freezes the user-agent string at x64 / x86_64, so ask for the real
+   architecture where the browser offers it. Resolves true if it changed. */
+async function refineDetect() {
+  const uad = navigator.userAgentData;
+  if (DETECTED.mobile || !uad || !uad.getHighEntropyValues) return false;
+  try {
+    const h = await uad.getHighEntropyValues(["architecture", "bitness"]);
+    let arch = DETECTED.arch;
+    if (DETECTED.os === "windows") {
+      if (h.architecture === "arm") arch = "arm64";
+      else if (h.architecture === "x86") arch = h.bitness === "32" ? "x86" : "x64";
+    } else if (DETECTED.os === "linux") {
+      if (h.architecture === "arm") arch = "aarch64";
+      else if (h.architecture === "x86") arch = "x86_64";
+    }
+    if (arch === DETECTED.arch) return false;
+    DETECTED.arch = arch;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+const DETECTED = detect();
+
+/* ---------------------------------------------------------------- storage */
+
+const CACHE_KEY = "craftworks.catalog.v2";
+const PREFS_KEY = "craftworks.prefs.v1";
+
+function readJSON(key) {
+  try { return JSON.parse(localStorage.getItem(key) || "null"); }
+  catch (e) { return null; }   // storage blocked or garbled: not fatal
+}
+
+function writeJSON(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch (e) { /* storage blocked: not fatal */ }
+}
+
+/* Take a saved release if it was checked more recently than what we have and
+   is usable. Returns true if the app's data changed. */
+function adopt(saved) {
+  const app = SUITE.find(a => a.id === saved.id);
+  if (!app || !saved.tag || !saved.published || !saved.checkedAt) return false;
+  if (!Array.isArray(saved.assets) || !saved.assets.every(x => Array.isArray(x) && typeof x[0] === "string")) return false;
+  if (Date.parse(saved.checkedAt) <= Date.parse(app.checkedAt)) return false;
+  if (Date.parse(saved.published) < Date.parse(app.published)) return false;
+  if (!hasPortable({ ...app, ...saved })) return false;
+  const changed = saved.tag !== app.tag || saved.assets.length !== app.assets.length;
+  Object.assign(app, { tag: saved.tag, published: saved.published, assets: saved.assets, checkedAt: saved.checkedAt });
+  return changed;
+}
+
+/* Take anything this browser checked after the bundled snapshot was made. */
+function restoreCache() {
+  const cached = readJSON(CACHE_KEY);
+  if (cached && Array.isArray(cached.apps)) cached.apps.forEach(adopt);
+}
+
+function writeCache() {
+  writeJSON(CACHE_KEY, {
+    apps: SUITE.map(a => ({ id: a.id, tag: a.tag, published: a.published, assets: a.assets, checkedAt: a.checkedAt }))
+  });
+}
+
+function savePrefs() {
+  writeJSON(PREFS_KEY, {
+    platform: state.platform,
+    seen: Object.fromEntries(SUITE.map(a => [a.id, a.tag]))
+  });
+}
+
+try { localStorage.removeItem("craftworks.catalog.v1"); } catch (e) { /* not fatal */ }
+restoreCache();
+
+const prefs = readJSON(PREFS_KEY) || {};
+const prevSeen = (prefs && prefs.seen) || {};    // tags shown on the previous visit, for "Updated" badges
+
+const state = {
+  query: "",
+  platform: ["auto", ...OS_ORDER].includes(prefs.platform) ? prefs.platform : "auto",
+  sel: {},                          // per-app manual override: { os, arch, kind }
+  open: new Set()                   // apps whose file list the user expanded
+};
+
+/* --------------------------------------------------------------- selection */
+
+/* Which OS should this card offer first? */
+function targetOs(avail) {
+  const wanted = state.platform === "auto" ? DETECTED.os : state.platform;
+  const order = [wanted, DETECTED.os, ...OS_ORDER];
+  for (const os of order) if (avail[os]) return os;
+  return Object.keys(avail)[0];
+}
+
+/* Pick the arch + packaging to show as the primary download, or null if there is nothing. */
+function choose(app, avail) {
+  const os = targetOs(avail);
+  if (!os) return null;
+  const arches = Object.keys(avail[os]);
+  const override = state.sel[app.id] || {};
+
+  const arch =
+    (override.os === os && arches.includes(override.arch)) ? override.arch
+    : (ARCH_SYNONYM[DETECTED.arch] || [DETECTED.arch]).find(a => arches.includes(a))
+      || ARCH_PREFERENCE.find(a => arches.includes(a))
+      || arches[0];
+
+  const kinds = avail[os][arch];
+  const kind =
+    (override.os === os && override.arch === arch && kinds[override.kind]) ? override.kind
+    : KIND_ORDER.find(k => kinds[k]) || Object.keys(kinds)[0];
+
+  return { os, arch, kind, arches, kinds, asset: kinds[kind] };
+}
+
+/* ------------------------------------------------------------------ helpers */
+
+function fmtSize(bytes) {
+  if (!bytes) return "";
+  const mb = bytes / 1e6;
+  return (mb >= 10 ? mb.toFixed(1) : mb.toFixed(2)) + " MB";
+}
+
+function fmtDate(when) {
+  const d = new Date(when);
+  if (isNaN(d)) return "";
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}
+
+function fmtDateTime(when) {
+  const d = new Date(when);
+  if (isNaN(d)) return "";
+  return d.toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+}
+
+function ago(ms) {
+  const mins = Math.floor((Date.now() - ms) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + " min ago";
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + " h ago";
+  return "on " + fmtDate(ms);
+}
+
+function untilReset(ms) {
+  if (!ms) return "";
+  const mins = Math.ceil((ms - Date.now()) / 60000);
+  if (!isFinite(mins) || mins <= 0) return "";
+  if (mins < 60) return mins + " min";
+  const hrs = Math.round(mins / 60);
+  return hrs + (hrs === 1 ? " hour" : " hours");
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function tidyTag(tag) {
+  return String(tag || "").replace(/^v/i, "");
+}
+
+const DL_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg>';
+
+/* ---------------------------------------------------------------- rendering */
+
+/* remember which icons loaded, so a re-rendered card doesn't flash its letter */
+const iconState = {};   // id → "ok" | "fail"
+
+function iconOk(img) {
+  const card = img.closest("[data-id]");
+  if (card) iconState[card.dataset.id] = "ok";
+  img.parentNode.classList.add("loaded");
+}
+
+function iconFail(img) {
+  const card = img.closest("[data-id]");
+  if (card) iconState[card.dataset.id] = "fail";
+  img.remove();
+}
+
+function downloadHTML(app, c) {
+  const chip = (data, label, pressed) =>
+    `<button type="button" class="chip" data-app="${app.id}" data-os="${c.os}" ${data} aria-pressed="${pressed}">${label}</button>`;
+  const tag = label => `<span class="chip tag">${label}</span>`;
+
+  const arches = c.arches.slice().sort((a, b) => rank(ARCH_PREFERENCE, a) - rank(ARCH_PREFERENCE, b));
+  const archChips = arches.length > 1
+    ? arches.map(a => chip(`data-arch="${a}"`, ARCH_LABEL[a] || a, a === c.arch)).join("")
+    : tag(ARCH_LABEL[c.arch] || c.arch);
+
+  const kinds = Object.keys(c.kinds).sort((a, b) => rank(KIND_ORDER, a) - rank(KIND_ORDER, b));
+  const kindChips = kinds.length > 1
+    ? kinds.map(k => chip(`data-arch="${c.arch}" data-kind="${k}"`, KIND_LABEL[k] || k, k === c.kind)).join("")
+    : tag(KIND_LABEL[c.kind] || c.kind);
+
+  // every portable file, grouped by OS with the one this card targets first
+  const files = app.assets
+    .map(([name, size]) => ({ name, size, t: parseAsset(name) }))
+    .filter(x => x.t);
+  const groups = [c.os, ...OS_ORDER.filter(os => os !== c.os)]
+    .filter(os => files.some(f => f.t.os === os))
+    .map(os => {
+      const rows = files
+        .filter(f => f.t.os === os)
+        .sort((a, b) => rank(ARCH_PREFERENCE, a.t.arch) - rank(ARCH_PREFERENCE, b.t.arch)
+                     || rank(KIND_ORDER, a.t.kind) - rank(KIND_ORDER, b.t.kind))
+        .map(f => `
+            <li>
+              <a${f.name === c.asset.name ? ' class="current"' : ""} href="${esc(assetUrl(app, f.name))}" title="${esc(f.name)}">
+                ${DL_ICON}
+                <span class="fname">${esc(f.name)}</span>
+                <span class="fsize">${fmtSize(f.size)}</span>
+              </a>
+            </li>`).join("");
+      return `
+          <div class="fgroup">
+            <h4>${OS_LABEL[os]}</h4>
+            <ul>${rows}</ul>
+          </div>`;
+    }).join("");
+
+  const label = "Download for " + OS_LABEL[c.os] + (c.arch === "universal" ? "" : " " + (ARCH_LABEL[c.arch] || c.arch));
+  const size = fmtSize(c.asset.size);
+
+  return `
+      <div class="dl">
+        <a class="btn" href="${esc(c.asset.url)}">
+          ${DL_ICON}
+          <span>${label}</span>
+          <span class="size">${KIND_LABEL[c.kind] || c.kind}${size ? " · " + size : ""}</span>
+        </a>
+        <div class="picker">
+          <div class="chips" role="group" aria-label="Architecture">${archChips}</div>
+          <span class="picker-sep" aria-hidden="true"></span>
+          <div class="chips" role="group" aria-label="Package format">${kindChips}</div>
+        </div>
+        <details class="files"${state.open.has(app.id) ? " open" : ""}>
+          <summary><span class="caret"></span>All portable files (${files.length})</summary>
+          ${groups}
+        </details>
+      </div>`;
+}
+
+function cardHTML(app) {
+  const c = choose(app, buildAvail(app));
+  const [r, g, b] = app.rgb;
+  const p = `--app-ink:rgb(${r},${g},${b});`
+    + `--app-12:rgba(${r},${g},${b},.12);--app-13:rgba(${r},${g},${b},.13);`
+    + `--app-18:rgba(${r},${g},${b},.18);--app-22:rgba(${r},${g},${b},.22);`
+    + `--app-30:rgba(${r},${g},${b},.30);--app-45:rgba(${r},${g},${b},.45);`
+    + `--app-55:rgba(${r},${g},${b},.55);`;
+
+  const repo = "https://github.com/storytold/" + app.id;
+  const release = repo + "/releases/tag/" + encodeURIComponent(app.tag);
+  const sums = app.assets.find(([name]) => /^SHA256SUMS/i.test(name));
+  const was = prevSeen[app.id];
+  const updated = was && was !== app.tag
+    ? `<span class="updated" title="New since your last visit (was ${esc(was)})">Updated</span>`
+    : "";
+
+  const sep = '<span class="sep" aria-hidden="true">·</span>';
+  const meta = `<span class="ver">v${esc(tidyTag(app.tag))}</span>${updated}` + [
+    `<time datetime="${esc(app.published)}" title="Published ${esc(fmtDateTime(app.published))}">${fmtDate(app.published)}</time>`,
+    `<a href="${esc(release)}" target="_blank" rel="noopener">Release notes</a>`,
+    `<a href="${repo}" target="_blank" rel="noopener">Source</a>`,
+    sums ? `<a href="${esc(assetUrl(app, sums[0]))}" target="_blank" rel="noopener" title="${esc(sums[0])}">SHA-256 sums</a>` : ""
+  ].filter(Boolean).join(sep);
+
+  const icon = iconState[app.id];
+  const img = icon === "fail" ? ""
+    : `<img src="${ICON_BASE}${app.id}.png" alt="" loading="lazy" decoding="async" onload="iconOk(this)" onerror="iconFail(this)">`;
+
+  const body = c ? downloadHTML(app, c)
+    : `<p class="nobuild">No portable build in ${esc(app.tag)} yet. <a href="${esc(release)}" target="_blank" rel="noopener">See the release</a></p>`;
+
+  return `
+    <article class="card" style="${p}" data-id="${app.id}" data-search="${esc((app.name + " " + app.tagline + " " + app.id).toLowerCase())}">
+      <div class="card-head">
+        <div class="icon${icon === "ok" ? " loaded" : ""}" aria-hidden="true">
+          <span class="letter">${esc(app.name.charAt(0))}</span>${img}
+        </div>
+        <div class="titles">
+          <h3>${esc(app.name)}</h3>
+          <p>${esc(app.tagline)}</p>
+        </div>
+      </div>
+
+      <div class="meta">${meta}</div>
+      ${body}
+    </article>`;
+}
+
+const grid = document.getElementById("grid");
+const empty = document.getElementById("empty");
+
+function render() {
+  grid.innerHTML = SUITE.map(cardHTML).join("");
+  applyFilter();
+}
+
+/* Re-render one card in place (the article itself stays, so hover and
+   filter state survive), then put focus back where it was. */
+function replaceCard(id, focusSelector) {
+  const app = SUITE.find(a => a.id === id);
+  const card = grid.querySelector('[data-id="' + id + '"]');
+  if (!app || !card) return;
+  const tpl = document.createElement("template");
+  tpl.innerHTML = cardHTML(app).trim();
+  card.replaceChildren(...tpl.content.firstElementChild.childNodes);
+  if (focusSelector) {
+    const el = card.querySelector(focusSelector);
+    if (el) el.focus({ preventScroll: true });
+  }
+}
+
+function applyFilter() {
+  const q = state.query.trim().toLowerCase();
+  let shown = 0;
+  for (const card of grid.children) {
+    const hit = !q || card.dataset.search.includes(q);
+    card.classList.toggle("hidden", !hit);
+    if (hit) shown++;
+  }
+  empty.classList.toggle("hidden", shown > 0);
+}
+
+/* --------------------------------------------------------------- interaction */
+
+grid.addEventListener("click", ev => {
+  const chip = ev.target.closest("button[data-app]");
+  if (!chip) return;
+
+  const id = chip.dataset.app;
+  const { os, arch, kind } = chip.dataset;
+  const prev = state.sel[id] || {};
+  state.sel[id] = {
+    os,
+    arch,
+    // keep a manual packaging choice only while the arch stays the same
+    kind: kind || (prev.arch === arch ? prev.kind : undefined)
+  };
+
+  replaceCard(id, kind
+    ? 'button[data-kind="' + kind + '"]'
+    : 'button[data-arch="' + arch + '"]:not([data-kind])');
+});
+
+/* remember expanded file lists across re-renders */
+grid.addEventListener("toggle", ev => {
+  const details = ev.target;
+  const card = details.closest("[data-id]");
+  if (!card) return;
+  if (details.open) state.open.add(card.dataset.id);
+  else state.open.delete(card.dataset.id);
+}, true);
+
+const platforms = document.getElementById("platforms");
+
+function syncPlatformButtons() {
+  for (const b of platforms.children) b.setAttribute("aria-pressed", String(b.dataset.os === state.platform));
+  document.getElementById("auto-os").textContent = " · " + OS_LABEL[DETECTED.os];
+}
+
+platforms.addEventListener("click", ev => {
+  const btn = ev.target.closest("button[data-os]");
+  if (!btn) return;
+  state.platform = btn.dataset.os;
+  state.sel = {};
+  syncPlatformButtons();
+  savePrefs();
+  render();
+});
+
+const q = document.getElementById("q");
+q.addEventListener("input", () => { state.query = q.value; applyFilter(); });
+document.addEventListener("keydown", ev => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement || {}).tagName || "");
+  if (ev.key === "/" && !ev.ctrlKey && !ev.metaKey && !ev.altKey && !typing) {
+    ev.preventDefault(); q.focus(); q.select();
+  }
+  if (ev.key === "Escape" && document.activeElement === q) { q.value = ""; state.query = ""; applyFilter(); q.blur(); }
+});
+
+/* ------------------------------------------------------------- live refresh */
+
+const dot = document.getElementById("dot");
+const statusEl = document.getElementById("status");
+const refreshBtn = document.getElementById("refresh");
+const announce = document.getElementById("announce");
+
+let busy = false;
+let note = "";                                        // outcome of the last refresh
+let quota = { remaining: null, limit: 60, resetAt: 0 };   // null = unknown
+
+function setStatus(text, kind) {
+  statusEl.textContent = text;
+  dot.dataset.state = kind;
+}
+
+/* GET /rate_limit does not count against the quota, so check it freely. */
+async function readQuota() {
+  try {
+    const res = await fetch(API + "rate_limit", { cache: "no-store" });
+    if (!res.ok) return;
+    const core = ((await res.json()).resources || {}).core;
+    if (core) quota = { remaining: core.remaining, limit: core.limit, resetAt: core.reset * 1000 };
+  } catch (e) { /* offline: leave it unknown */ }
+}
+
+async function pullLatest(app) {
+  const res = await fetch(API + "repos/storytold/" + app.id + "/releases/latest", {
+    headers: { Accept: "application/vnd.github+json" }
+    // GitHub marks these max-age=60, so a quick second Refresh is served from the browser cache
+  });
+  if (!res.ok) {
+    const err = new Error("HTTP " + res.status);
+    err.status = res.status;
+    if (res.status === 403 || res.status === 429) {
+      err.quota = true;
+      const reset = Number(res.headers.get("x-ratelimit-reset"));
+      if (reset) err.resetAt = reset * 1000;
+    }
+    throw err;
+  }
+  const rel = await res.json();
+  if (!rel || !rel.tag_name) throw new Error("no release");
+  return {
+    tag: rel.tag_name,
+    published: rel.published_at,
+    assets: (rel.assets || []).map(a => [a.name, a.size])
+  };
+}
+
+function updateStatus() {
+  if (busy) return;
+  const now = Date.now();
+  if (quota.remaining === 0 && quota.resetAt && now >= quota.resetAt) quota.remaining = null;   // a new hour
+
+  const times = SUITE.map(a => Date.parse(a.checkedAt) || 0);
+  const oldest = Math.min(...times), newest = Math.max(...times);
+  const current = times.filter(t => now - t < FRESH_MS).length;
+
+  const parts = [];
+  let kind = "cached";
+  if (current === SUITE.length) {
+    kind = "live";
+    parts.push("All " + SUITE.length + " apps checked " + ago(oldest));
+  } else if (current > 0) {
+    kind = "partial";
+    parts.push(current + " of " + SUITE.length + " checked " + ago(newest), "others " + ago(oldest));
+  } else if (newest === SNAPSHOT_MS) {
+    parts.push("Bundled snapshot from " + fmtDate(SNAPSHOT_MS));
+  } else {
+    parts.push("Last checked " + ago(oldest));
+  }
+
+  if (note) parts.push(note);
+  if (quota.remaining === 0) {
+    const wait = untilReset(quota.resetAt);
+    parts.push(wait ? "GitHub quota resets in " + wait : "GitHub quota used up");
+  } else if (quota.remaining != null && quota.remaining < SUITE.length) {
+    parts.push(quota.remaining + " GitHub checks left this hour");
+  }
+  setStatus(parts.join(" · "), kind);
+
+  refreshBtn.disabled = quota.remaining === 0;
+  refreshBtn.title =
+    quota.remaining === 0 ? "GitHub's hourly quota for this network is used up"
+    : quota.remaining == null ? "Check GitHub for new releases"
+    : quota.remaining + " of " + quota.limit + " GitHub requests left this hour · a full refresh uses " + SUITE.length;
+}
+
+async function refresh() {
+  if (busy) return;
+  busy = true;
+  refreshBtn.disabled = true;
+  setStatus("Checking GitHub…", "loading");
+
+  await readQuota();
+
+  // apps checked longest ago go first, and never ask for more than the quota has left
+  const todo = SUITE.slice().sort((a, b) => Date.parse(a.checkedAt) - Date.parse(b.checkedAt));
+  if (quota.remaining != null) todo.length = Math.min(todo.length, quota.remaining);
+
+  let cursor = 0, ok = 0, noFiles = 0, failed = 0, newer = 0, quotaHit = false;
+  const changed = [];
+
+  // four requests at a time, and stop the moment the quota runs out
+  async function worker() {
+    while (!quotaHit && cursor < todo.length) {
+      const app = todo[cursor++];
+      try {
+        const rel = await pullLatest(app);
+        // a release whose files are still uploading has nothing to offer yet: keep what we had
+        if (!hasPortable({ ...app, ...rel })) { noFiles++; continue; }
+        if (rel.tag !== app.tag) newer++;
+        if (rel.tag !== app.tag || rel.assets.length !== app.assets.length) changed.push(app.id);
+        Object.assign(app, rel, { checkedAt: new Date().toISOString() });
+        ok++;
+      } catch (err) {
+        if (err && err.quota) {
+          quotaHit = true;
+          quota.remaining = 0;
+          if (err.resetAt) quota.resetAt = err.resetAt;
+        } else {
+          failed++;
+        }
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: 4 }, worker));
+  await readQuota();   // the true count, whatever the browser cache answered
+
+  const bits = [];
+  if (ok) bits.push(newer ? newer + " updated" : "nothing new");
+  if (noFiles) bits.push(noFiles + (noFiles === 1 ? " release has" : " releases have") + " no files yet");
+  if (failed) bits.push(ok || noFiles ? failed + " couldn't be checked" : "GitHub unreachable");
+  note = bits.join(" · ");
+
+  if (ok) { writeCache(); savePrefs(); }
+  for (const id of changed) replaceCard(id);
+  applyFilter();
+
+  busy = false;
+  updateStatus();
+  announce.textContent = statusEl.textContent;
+}
+
+refreshBtn.addEventListener("click", () => refresh());
+
+/* When hosted, a scheduled GitHub Action publishes catalog.json next to this
+   page (see .github/workflows/publish.yml). Reading it costs no API quota. */
+async function loadCatalog() {
+  if (!/^https?:$/.test(location.protocol)) return;
+  try {
+    const res = await fetch("catalog.json", { cache: "no-cache" });
+    if (!res.ok) return;
+    const catalog = await res.json();
+    if (!catalog || !Array.isArray(catalog.apps)) return;
+    const changed = catalog.apps.filter(adopt).map(a => a.id);
+    for (const id of changed) replaceCard(id);
+    applyFilter();
+    writeCache();
+    savePrefs();
+    updateStatus();
+  } catch (e) { /* no catalog (opened from disk, or not deployed yet): not fatal */ }
+}
+
+/* --------------------------------------------------------------- first paint */
+
+// bundled snapshot, upgraded with whatever this browser checked since and with
+// the published catalog; GitHub itself is only asked when the user presses Refresh
+if (DETECTED.mobile) document.getElementById("mobile-note").classList.remove("hidden");
+syncPlatformButtons();
+render();
+savePrefs();
+updateStatus();
+loadCatalog();
+readQuota().then(updateStatus);
+refineDetect().then(changed => { if (changed) { syncPlatformButtons(); render(); } });
+setInterval(updateStatus, 30000);
+</script>
+</body>
+</html>

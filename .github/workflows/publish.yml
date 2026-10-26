@@ -1,0 +1,52 @@
+name: Publish site
+
+# Re-checks every Craft App release and redeploys the page with a fresh
+# catalog.json. Nothing is committed: the catalog only lives on GitHub Pages.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours, off the hour (GitHub may start scheduled runs late)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check releases and build the site
+        run: node scripts/build-site.mjs craft-works.html _site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
